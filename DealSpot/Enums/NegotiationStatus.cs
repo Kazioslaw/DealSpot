@@ -2,8 +2,9 @@
 {
 	public enum NegotiationStatus
 	{
-		Accepted,
+		PriceAccepted,
 		PriceRejected,
-		Cancelled
+		PriceProposed,
+		NegotiationCancelled,
 	}
 }
