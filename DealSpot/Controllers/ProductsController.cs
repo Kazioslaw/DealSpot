@@ -38,15 +38,15 @@ namespace DealSpot.Controllers
 
 		// POST
 		[HttpPost]
-		public IActionResult CreateProduct([FromBody] ICollection<Product> products)
+		public IActionResult CreateProduct([FromBody] Product product)
 		{
-			if (products == null)
+			if (product == null)
 			{
 				return BadRequest();
 			}
-			_productService.CreateProduct(products);
+			_productService.CreateProduct(product);
 
-			return CreatedAtAction(nameof(CreateProduct), new { Id = products.Select(p => p.ID) }, products);
+			return CreatedAtAction(nameof(CreateProduct), new { Id = product.ID }, product);
 		}
 	}
 }
