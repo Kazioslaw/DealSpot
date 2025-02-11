@@ -28,7 +28,7 @@ namespace DealSpot.Controllers
 			return Ok(negotiation);
 		}
 
-		[HttpPost]
+		[HttpPost("start")]
 		public IActionResult StartNegotiation(int productID, decimal proposedPrice)
 		{
 			var product = _productService.GetProduct(productID);
@@ -51,7 +51,7 @@ namespace DealSpot.Controllers
 			return CreatedAtAction(nameof(StartNegotiation), new { ID = negotiation.ID }, negotiation);
 		}
 
-		[HttpPost("{id:int}")]
+		[HttpPost("negotiate/{id:int}")]
 		public IActionResult NegotiationNewPrice(int id, decimal proposedPrice)
 		{
 			var negotiation = _negotiationService.GetNegotiation(id);
