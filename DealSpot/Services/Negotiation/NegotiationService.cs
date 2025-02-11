@@ -23,6 +23,11 @@ namespace DealSpot.Services
 			return _context.Negotiation.Where(n => n.ID == id).FirstOrDefault();
 		}
 
+		public IEnumerable<Negotiation> GetNegotiations()
+		{
+			return _context.Negotiation.ToList();
+		}
+
 		public Negotiation UpdateNegotiation(Negotiation negotiation)
 		{
 			_context.Negotiation.Update(negotiation);
