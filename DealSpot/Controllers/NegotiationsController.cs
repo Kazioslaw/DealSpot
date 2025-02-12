@@ -126,6 +126,7 @@ namespace DealSpot.Controllers
 
 		[HttpPost("{id:int}/accept")]
 		[EndpointDescription("Akceptuje cenę zmieniając status negocjacji na 'PriceAccept'")]
+		[ProducesResponseType(200)]
 		[ProducesResponseType(404)]
 		public IActionResult NegotiationAcceptPrice(int id)
 		{
