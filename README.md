@@ -1,5 +1,11 @@
 # DealSpot
 
+## Important
+
+Baza danych w projekcie zawiera obecnie **puste tabele**. Aby poprawnie przetestować działanie niektórych API, konieczne jest **uzupełnienie bazy danych odpowiednimi danymi testowymi**.
+
+Proszę upewnić się, że przed przeprowadzeniem testów API baza danych została odpowiednio wypełniona poprzez uruchomienie procesu inicjalizacji danych lub odpowiednich wywołań API.
+
 ## About
 
 Aplikacja jest projektem Web API mającym być w zamyśle api dla strony pozwalającej negocjować cenę wystawionego produktu na sprzedaż.
@@ -168,6 +174,29 @@ Służy do anulowana negocjacji o podanym identyfikatorze.
 - **200 OK**: Informuje o pomyślnej zmianie statusu na 'NegotiationCancelled'
 - **404 Not Found**: Brak dostępnego zasobu o podanym identyfikatorze.
 
+### Authentication
+
+Ten system uwierzytelniania zawiera tymczasowego użytkownika który domyślnie powinien zostać zastąpiony systemem Identity lub własnoręcznie napisanym systemem rejstracji/logowania użytkownika.
+W tym samym kontrolerze dodano funkcję generowania tokena jwt. Powinien zostać on domyślnie później przeniesiony do odpowiedniej osobnej klasy odpowiadającej za tą rzecz.
+Zostało to w tym momencie zrobione w taki sposób by zweryfikować własnoręcznie napisany system logowania oraz generowania tokenu w celu przetestowania zabezpieczenia api z pomocą autoryzacji.
+
+#### `POST api/authentication/login`:
+
+Służy do logowania się do systemu w celu wygenerowania tokenu jwt w celu użycia go później w celu "odblokowania" dostępu do zabezpieczonych API
+
+##### Body:
+- **user** - Model danych logowania
+
+````json
+{
+	"username": string
+	"password": string
+}
+````
+
+##### Response:
+- **200 OK**: Informuje o poprawnym zalogowaniu oraz odsyła odpowiedni token jwt
+- **401 Unauthorized**: Brak użytkownika o podanych danych wysłanych poprzez JSON
 ---
 
 ###### Ten projekt został stworzony na potrzeby rekrutacji.
