@@ -1,10 +1,12 @@
 ﻿using DealSpot.Enums;
 using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class NegotiationsController : ControllerBase
@@ -24,6 +26,7 @@ namespace DealSpot.Controllers
 		/// `200 OK` - Zwracaca listę aktualnie prowadzonych oraz zakończonych negocjacji
 		/// `204 NoContent` - Brak negocjacji do zwrócenia
 		/// </returns>
+
 		[HttpGet]
 		[EndpointDescription("Pobiera listę negocjacji")]
 		[ProducesResponseType(typeof(ICollection<Negotiation>), 200)]

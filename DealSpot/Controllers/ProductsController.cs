@@ -1,10 +1,12 @@
 ﻿using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
