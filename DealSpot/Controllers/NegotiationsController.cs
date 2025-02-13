@@ -53,7 +53,7 @@ namespace DealSpot.Controllers
 
 		[HttpGet("{id:int}")]
 		[Authorize]
-    [EndpointDescription("Zwraca szczegóły negocjacji o podanym identyfikatorze")]
+		[EndpointDescription("Zwraca szczegóły negocjacji o podanym identyfikatorze")]
 		[ProducesResponseType(typeof(Negotiation), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetNegotation(int id)
@@ -176,6 +176,7 @@ namespace DealSpot.Controllers
 		/// </returns> 
 
 		[HttpPost("{id:int}/accept")]
+		[Authorize]
 		[EndpointDescription("Akceptuje cenę zmieniając status negocjacji na 'PriceAccept'")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(404)]
@@ -203,6 +204,7 @@ namespace DealSpot.Controllers
 		/// </returns>
 
 		[HttpPost("{id:int}/reject")]
+		[Authorize]
 		[EndpointDescription("Odrzuca cenę zmieniając status negocjacji na 'Price rejected'.")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(404)]
@@ -230,6 +232,7 @@ namespace DealSpot.Controllers
 		/// </returns>
 
 		[HttpPost("{id:int}/cancel")]
+		[Authorize]
 		[EndpointDescription("Anuluje określoną negocjację")]
 		[ProducesResponseType(200)]
 		[ProducesResponseType(404)]
