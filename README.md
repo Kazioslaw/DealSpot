@@ -1,5 +1,11 @@
 # DealSpot
 
+## Important
+
+Baza danych w projekcie zawiera obecnie **puste tabele**. Aby poprawnie przetestować działanie niektórych API, konieczne jest **uzupełnienie bazy danych odpowiednimi danymi testowymi**.
+
+Proszę upewnić się, że przed przeprowadzeniem testów API baza danych została odpowiednio wypełniona poprzez uruchomienie procesu inicjalizacji danych lub odpowiednich wywołań API.
+
 ## About
 
 Aplikacja jest projektem Web API mającym być w zamyśle api dla strony pozwalającej negocjować cenę wystawionego produktu na sprzedaż.
