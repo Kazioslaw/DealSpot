@@ -18,9 +18,16 @@ namespace DealSpot.Controllers
 			_productService = productService;
 		}
 
-		// GET-ALL
+		/// <summary>
+		/// Zwraca listę produktów
+		/// </summary>
+		/// <returns>
+		/// `200 OK` - Zwraca listę zasobów
+		/// `204 No Content` - Brak zasobów do zwrócenia
+		/// </returns>
 		[AllowAnonymous]
 		[HttpGet]
+		[EndpointDescription("Zwraca listę produktów")]
 		[ProducesResponseType(typeof(ICollection<Product>), 200)]
 		[ProducesResponseType(204)]
 		public IActionResult GetProductList()
@@ -33,9 +40,17 @@ namespace DealSpot.Controllers
 			return Ok(productList);
 		}
 
-		// GET
+		/// <summary>
+		/// Zwraca szczegółówe informacje zasobu o podanym identyfikatorze
+		/// </summary>
+		/// <param name="id">Unikalny identyfikator zasobu</param>
+		/// <returns>
+		/// `200 OK` - Zwraca szczegółowe informacje dotyczące zasobu
+		/// `404 Not Found` - Brak zasobu o podanym identyfikatorze
+		/// </returns>
 		[HttpGet("{id:int}")]
 		[AllowAnonymous]
+    [EndpointDescription("Zwraca szczegółowe informacje zasobu o podanym identyfikatorze")]
 		[ProducesResponseType(typeof(Product), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetProduct(int id)
@@ -48,8 +63,15 @@ namespace DealSpot.Controllers
 			return Ok(product);
 		}
 
-		// POST
-		[HttpPost]
+		/// <summary>
+		/// Tworzy podany zasób w oparciu o przesłane dane
+		/// </summary>
+		/// <param name="product">Obiekt reprezentujący produkt do utworzenia</param>
+		/// <returns>
+		/// `201 Created` - Pomyślnie utworzono zasób
+		/// `400 Bad Request` - Brak informacji w przesłanym obiekcie
+		/// </returns>
+		[HttpPost]    
 		[ProducesResponseType(typeof(Product), 201)]
 		[ProducesResponseType(400)]
 		public IActionResult CreateProduct([FromBody] Product product)
