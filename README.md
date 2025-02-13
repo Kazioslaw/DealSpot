@@ -126,7 +126,7 @@ double
 ##### Response:
 
 - **200 OK**: Informuje o pomyślnym zaproponowaniu nowej ceny
-- **400 Bad Request**: Informuje o przekroczeniu ilośc prób, czasu lub zaproponowana cena była równa poprzednio zaproponowanej.
+- **400 Bad Request**: Informuje o przekroczeniu ilości prób, czasu, jeśli zaproponowana cena była równa poprzednio zaproponowanej lub jeśli próbuje się aktualizować cenę anulowanej negocjacji.
 - **404 Not Found**: Brak dostępnego zasobu o podanym identyfikatorze.
 
 #### `POST api/negotiations/{id}/accept`:
