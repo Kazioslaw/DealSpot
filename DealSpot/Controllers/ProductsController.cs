@@ -20,8 +20,8 @@ namespace DealSpot.Controllers
 		[HttpGet]
 		public IActionResult GetProductList()
 		{
-			var products = _productService.GetProducts();
-			return Ok(products);
+			var productList = _productService.GetProducts();
+			return Ok(productList);
 		}
 
 		// GET

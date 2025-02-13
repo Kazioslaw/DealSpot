@@ -17,6 +17,13 @@ namespace DealSpot.Controllers
 			_productService = productService;
 		}
 
+		[HttpGet]
+		public IActionResult GetNegotiationList()
+		{
+			var negotiationList = _negotiationService.GetNegotiations();
+			return Ok(negotiationList);
+		}
+
 		[HttpGet("{id:int}")]
 		public IActionResult GetNegotation(int id)
 		{
@@ -28,8 +35,8 @@ namespace DealSpot.Controllers
 			return Ok(negotiation);
 		}
 
-		[HttpPost("start")]
-		public IActionResult StartNegotiation(int productID, decimal proposedPrice)
+		[HttpPost]
+		public IActionResult StartNegotiation(int productID, [FromBody] decimal proposedPrice)
 		{
 			var product = _productService.GetProduct(productID);
 			if (product == null)
@@ -42,41 +49,55 @@ namespace DealSpot.Controllers
 				Product = product,
 				ActualPrice = product.Price,
 				ProposedPrice = proposedPrice,
-				NegotiationStartTime = DateTime.Now,
-				NegotiationPriceProposedTime = DateTime.Now,
+				StartTime = DateTime.UtcNow,
+				PriceProposedTime = DateTime.UtcNow,
 				AttemptCount = 1,
 				Status = NegotiationStatus.PriceProposed,
+
 			};
 			_negotiationService.CreateNegotiation(negotiation);
 			return CreatedAtAction(nameof(StartNegotiation), new { ID = negotiation.ID }, negotiation);
 		}
 
 		[HttpPost("negotiate/{id:int}")]
-		public IActionResult NegotiationNewPrice(int id, decimal proposedPrice)
+		public IActionResult NegotiationNewPrice(int id, [FromBody] decimal proposedPrice)
 		{
 			var negotiation = _negotiationService.GetNegotiation(id);
 			if (negotiation == null)
 			{
-				return BadRequest();
+				return NotFound($"Negotiation with this id:{id} is not found.");
 			}
-			if (negotiation.AttemptCount > 2)
-			{
-				NegotiationCanceledPrice(id);
-				return BadRequest("The number of price negotiation attempts has been exceeded");
-			}
-			if (DateTime.Now > negotiation.LastRejectedPriceTime.Value.AddDays(7))
-			{
-				NegotiationCanceledPrice(id);
-				return BadRequest("The time limit for negotiation has passed");
-			}
+
 
 			negotiation.ProposedPrice = proposedPrice;
-			negotiation.LastRejectedPriceTime = null;
-			negotiation.NegotiationPriceProposedTime = DateTime.Now;
+			negotiation.PriceProposedTime = DateTime.Now;
 			negotiation.AttemptCount = negotiation.AttemptCount + 1;
 
-			_negotiationService.UpdateNegotiation(negotiation);
-			return Ok(negotiation);
+			if (negotiation.LastRejectedTime != null)
+			{
+				if (negotiation.PriceProposedTime > negotiation.LastRejectedTime.Value.AddDays(7))
+				{
+					NegotiationCanceledPrice(id);
+					return BadRequest("You can no longer negotiate the price as the allowed period has passed.");
+				}
+			}
+			if (negotiation.AttemptCount >= 3)
+			{
+				NegotiationCanceledPrice(id);
+				return BadRequest("You have reached maximum try of price negotiation");
+			}
+			if (negotiation.ProposedPrice == negotiation.LastRejectedPrice)
+			{
+				NegotiationRejectedPrice(id);
+				return BadRequest("This price was rejected last time. Please propose a different price");
+			}
+			if (negotiation.Status == NegotiationStatus.NegotiationCancelled)
+			{
+				return BadRequest("This negotiation has already been cancelled.");
+			}
+
+
+			return Ok(new { Message = "The proposed price has ben successfully submitted", negotiation });
 		}
 
 		[HttpPost("{id:int}/accept")]
@@ -87,9 +108,10 @@ namespace DealSpot.Controllers
 			{
 				return BadRequest();
 			}
+			negotiation.LastRejectedTime = null;
 			negotiation.Status = NegotiationStatus.PriceAccepted;
 			_negotiationService.UpdateNegotiation(negotiation);
-			return Ok("Price was accepted");
+			return Ok("The price has been accepted successfully and the negotiation is now closed.");
 
 		}
 
@@ -99,12 +121,13 @@ namespace DealSpot.Controllers
 			var negotiation = _negotiationService.GetNegotiation(id);
 			if (negotiation == null)
 			{
-				return BadRequest();
+				return NotFound($"Negotiation with this id:{id} is not found.");
 			}
+			negotiation.LastRejectedPrice = negotiation.ProposedPrice;
 			negotiation.Status = NegotiationStatus.PriceRejected;
-			negotiation.LastRejectedPriceTime = DateTime.Now;
+			negotiation.LastRejectedTime = DateTime.Now;
 			_negotiationService.UpdateNegotiation(negotiation);
-			return Ok("Price was rejected");
+			return Ok("The price has been rejected and a new negotiation attempt can be made.");
 		}
 
 		[HttpPost("{id:int}/cancel")]
@@ -113,13 +136,11 @@ namespace DealSpot.Controllers
 			var negotiation = _negotiationService.GetNegotiation(id);
 			if (negotiation == null)
 			{
-				return BadRequest();
+				return NotFound($"Negotiation with this id:{id} is not found.");
 			}
 			negotiation.Status = NegotiationStatus.NegotiationCancelled;
 			_negotiationService.UpdateNegotiation(negotiation);
-			return Ok("Negotiation was cancelled");
+			return Ok("The negotiation has been cancelled and can no longer be continued.");
 		}
 	}
-
-
 }

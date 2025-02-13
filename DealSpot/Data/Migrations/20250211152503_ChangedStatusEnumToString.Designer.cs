@@ -3,16 +3,19 @@ using System;
 using DealSpot.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DealSpot.Data.Migrations
+namespace DealSpot.Data.migrations
 {
     [DbContext(typeof(DealSpotDBContext))]
-    partial class DealSpotDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250211152503_ChangedStatusEnumToString")]
+    partial class ChangedStatusEnumToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -29,22 +32,19 @@ namespace DealSpot.Data.Migrations
                     b.Property<int>("AttemptCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal?>("LastRejectedPrice")
+                    b.Property<DateTime?>("LastRejectedPriceTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastRejectedTime")
+                    b.Property<DateTime>("NegotiationPriceProposedTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("PriceProposedTime")
+                    b.Property<DateTime>("NegotiationStartTime")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ProductID")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("ProposedPrice")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("StartTime")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
@@ -66,7 +66,6 @@ namespace DealSpot.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(3)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
