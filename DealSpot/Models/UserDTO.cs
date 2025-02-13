@@ -1,8 +1,8 @@
 ﻿namespace DealSpot.Models
 {
-	public class User
+	public class UserDTO
 	{
 		public string Username { get; set; }
-		public string PasswordHash { get; set; }
+		public string Password { get; set; }
 	}
 }
