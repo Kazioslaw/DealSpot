@@ -1,10 +1,12 @@
 ﻿using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -17,15 +19,25 @@ namespace DealSpot.Controllers
 		}
 
 		// GET-ALL
+		[AllowAnonymous]
 		[HttpGet]
+		[ProducesResponseType(typeof(ICollection<Product>), 200)]
+		[ProducesResponseType(204)]
 		public IActionResult GetProductList()
 		{
 			var productList = _productService.GetProducts();
+			if (productList == null)
+			{
+				return NoContent();
+			}
 			return Ok(productList);
 		}
 
 		// GET
 		[HttpGet("{id:int}")]
+		[AllowAnonymous]
+		[ProducesResponseType(typeof(Product), 200)]
+		[ProducesResponseType(404)]
 		public IActionResult GetProduct(int id)
 		{
 			var product = _productService.GetProduct(id);
@@ -38,11 +50,13 @@ namespace DealSpot.Controllers
 
 		// POST
 		[HttpPost]
+		[ProducesResponseType(typeof(Product), 201)]
+		[ProducesResponseType(400)]
 		public IActionResult CreateProduct([FromBody] Product product)
 		{
 			if (product == null)
 			{
-				return BadRequest();
+				return BadRequest("Product cannot be null.");
 			}
 			_productService.CreateProduct(product);
 
