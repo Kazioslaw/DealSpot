@@ -1,10 +1,12 @@
 ﻿using DealSpot.Enums;
 using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
+	[Authorize]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class NegotiationsController : ControllerBase
@@ -24,7 +26,9 @@ namespace DealSpot.Controllers
 		/// `200 OK` - Zwracaca listę aktualnie prowadzonych oraz zakończonych negocjacji
 		/// `204 NoContent` - Brak negocjacji do zwrócenia
 		/// </returns>
+
 		[HttpGet]
+		[Authorize]
 		[EndpointDescription("Zwraca listę negocjacji")]
 		[ProducesResponseType(typeof(ICollection<Negotiation>), 200)]
 		[ProducesResponseType(204)]
@@ -48,7 +52,8 @@ namespace DealSpot.Controllers
 		/// </returns>
 
 		[HttpGet("{id:int}")]
-		[EndpointDescription("Zwraca szczegóły negocjacji o podanym identyfikatorze")]
+		[Authorize]
+    [EndpointDescription("Zwraca szczegóły negocjacji o podanym identyfikatorze")]
 		[ProducesResponseType(typeof(Negotiation), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetNegotation(int id)
@@ -75,7 +80,7 @@ namespace DealSpot.Controllers
 		[EndpointDescription("Tworzy nową negocjacje na podstawie proponowanej ceny")]
 		[ProducesResponseType(typeof(Negotiation), 201)]
 		[ProducesResponseType(404)]
-		public IActionResult StartNegotiation(int productID, [FromBody] decimal proposedPrice)
+		public IActionResult StartNegotiation([FromBody] int productID, [FromBody] decimal proposedPrice)
 		{
 			var product = _productService.GetProduct(productID);
 			if (product == null)

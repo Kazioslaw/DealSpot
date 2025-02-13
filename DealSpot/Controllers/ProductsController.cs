@@ -1,10 +1,12 @@
 ﻿using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -23,6 +25,7 @@ namespace DealSpot.Controllers
 		/// `200 OK` - Zwraca listę zasobów
 		/// `204 No Content` - Brak zasobów do zwrócenia
 		/// </returns>
+		[AllowAnonymous]
 		[HttpGet]
 		[EndpointDescription("Zwraca listę produktów")]
 		[ProducesResponseType(typeof(ICollection<Product>), 200)]
@@ -46,7 +49,8 @@ namespace DealSpot.Controllers
 		/// `404 Not Found` - Brak zasobu o podanym identyfikatorze
 		/// </returns>
 		[HttpGet("{id:int}")]
-		[EndpointDescription("Zwraca szczegółowe informacje zasobu o podanym identyfikatorze")]
+		[AllowAnonymous]
+    [EndpointDescription("Zwraca szczegółowe informacje zasobu o podanym identyfikatorze")]
 		[ProducesResponseType(typeof(Product), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetProduct(int id)
@@ -67,7 +71,7 @@ namespace DealSpot.Controllers
 		/// `201 Created` - Pomyślnie utworzono zasób
 		/// `400 Bad Request` - Brak informacji w przesłanym obiekcie
 		/// </returns>
-		[HttpPost]
+		[HttpPost]    
 		[ProducesResponseType(typeof(Product), 201)]
 		[ProducesResponseType(400)]
 		public IActionResult CreateProduct([FromBody] Product product)
