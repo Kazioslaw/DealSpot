@@ -36,7 +36,7 @@ namespace DealSpot.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult StartNegotiation(int productID, [FromBody] decimal proposedPrice)
+		public IActionResult StartNegotiation([FromBody] int productID, [FromBody] decimal proposedPrice)
 		{
 			var product = _productService.GetProduct(productID);
 			if (product == null)
