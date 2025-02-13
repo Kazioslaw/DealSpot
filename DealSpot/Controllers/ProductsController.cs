@@ -1,10 +1,12 @@
 ﻿using DealSpot.Models;
 using DealSpot.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DealSpot.Controllers
 {
 	[Route("api/[controller]")]
+	[Authorize]
 	[ApiController]
 	public class ProductsController : ControllerBase
 	{
@@ -17,6 +19,7 @@ namespace DealSpot.Controllers
 		}
 
 		// GET-ALL
+		[AllowAnonymous]
 		[HttpGet]
 		[ProducesResponseType(typeof(ICollection<Product>), 200)]
 		[ProducesResponseType(204)]
@@ -32,6 +35,7 @@ namespace DealSpot.Controllers
 
 		// GET
 		[HttpGet("{id:int}")]
+		[AllowAnonymous]
 		[ProducesResponseType(typeof(Product), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetProduct(int id)
