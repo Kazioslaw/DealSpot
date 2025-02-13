@@ -1,12 +1,9 @@
-
-using DealSpot.Configurations;
 using DealSpot.Data;
 using DealSpot.Services;
 using DealSpot.Services.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 using System.Text;
 
@@ -25,8 +22,6 @@ namespace DealSpot
 			builder.Services.AddScoped<IUserService, UserService>();
 			builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 			builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-			builder.Services.AddScoped<JwtConfig>();
-			builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
 			builder.Services.AddControllers();
 			builder.Services.AddAuthentication(options =>
 			{
@@ -37,7 +32,6 @@ namespace DealSpot
 				.AddJwtBearer(jwt =>
 				{
 					jwt.SaveToken = true;
-					var key = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>();
 					jwt.TokenValidationParameters = new TokenValidationParameters
 					{
 						ValidateIssuer = true,
@@ -48,41 +42,8 @@ namespace DealSpot
 						ValidateIssuerSigningKey = true,
 						RequireExpirationTime = true,
 						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:Secret"]))
-						//ValidateIssuerSigningKey = true,
-						//IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key.Secret)),
-						//ValidateIssuer = false,
-						//ValidateAudience = false,
-						//RequireExpirationTime = false,
-						//ValidateLifetime = true
 					};
 				});
-			builder.Services.AddSwaggerGen(options =>
-			{
-				options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-				{
-					In = ParameterLocation.Header,
-					Name = "Authorization",
-					Type = SecuritySchemeType.Http,
-					Scheme = "bearer",
-					BearerFormat = "JWT",
-					Description = "Podaj token jwt"
-				});
-
-				options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-				{
-					{
-						new OpenApiSecurityScheme
-						{
-							Reference = new OpenApiReference
-							{
-								Type = ReferenceType.SecurityScheme,
-								Id = "Bearer"
-							}
-						},
-						new string[] {}
-					}
-				});
-			});
 
 
 
@@ -98,8 +59,6 @@ namespace DealSpot
 			{
 				app.MapOpenApi();
 				app.MapScalarApiReference();
-				app.UseSwagger();
-				app.UseSwaggerUI();
 
 			}
 
