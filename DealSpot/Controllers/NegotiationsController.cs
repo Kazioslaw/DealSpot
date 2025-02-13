@@ -61,7 +61,7 @@ namespace DealSpot.Controllers
 		[EndpointDescription("Tworzy nową negocjacje na podstawie proponowanej ceny")]
 		[ProducesResponseType(typeof(Negotiation), 201)]
 		[ProducesResponseType(404)]
-		public IActionResult StartNegotiation(int productID, [FromBody] decimal proposedPrice)
+		public IActionResult StartNegotiation([FromBody] int productID, [FromBody] decimal proposedPrice)
 		{
 			var product = _productService.GetProduct(productID);
 			if (product == null)
