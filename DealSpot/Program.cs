@@ -1,5 +1,6 @@
 
 using DealSpot.Data;
+using DealSpot.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -13,6 +14,8 @@ namespace DealSpot
 
 			// Add services to the container.
 			builder.Services.AddDbContext<DealSpotDBContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+			builder.Services.AddScoped<IProductService, ProductService>();
+			builder.Services.AddScoped<INegotiationService, NegotiationService>();
 
 			builder.Services.AddControllers();
 			// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
