@@ -28,6 +28,7 @@ namespace DealSpot.Controllers
 		/// </returns>
 
 		[HttpGet]
+		[Authorize]
 		[EndpointDescription("Pobiera listę negocjacji")]
 		[ProducesResponseType(typeof(ICollection<Negotiation>), 200)]
 		[ProducesResponseType(204)]
@@ -42,6 +43,7 @@ namespace DealSpot.Controllers
 		}
 
 		[HttpGet("{id:int}")]
+		[Authorize]
 		[EndpointDescription("Pobiera szczegóły negocjacji o podanym identyfikatorze")]
 		[ProducesResponseType(typeof(Negotiation), 200)]
 		[ProducesResponseType(404)]

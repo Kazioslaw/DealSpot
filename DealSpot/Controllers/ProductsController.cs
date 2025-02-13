@@ -19,6 +19,7 @@ namespace DealSpot.Controllers
 		}
 
 		// GET-ALL
+		[AllowAnonymous]
 		[HttpGet]
 		[ProducesResponseType(typeof(ICollection<Product>), 200)]
 		[ProducesResponseType(204)]
@@ -34,6 +35,7 @@ namespace DealSpot.Controllers
 
 		// GET
 		[HttpGet("{id:int}")]
+		[AllowAnonymous]
 		[ProducesResponseType(typeof(Product), 200)]
 		[ProducesResponseType(404)]
 		public IActionResult GetProduct(int id)
